@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\HourlyRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\HourlyRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: HourlyRepository::class)]
+#[ApiResource()]
 class Hourly
 {
     #[ORM\Id]

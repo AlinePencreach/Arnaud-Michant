@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GaleryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\GaleryRepository;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: GaleryRepository::class)]
+#[ApiResource()]
 class Galery
 {
     #[ORM\Id]
