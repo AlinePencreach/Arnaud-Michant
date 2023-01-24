@@ -26,9 +26,10 @@ class AppUser extends Fixture
         
         for ($i=0; $i < 50; $i++) { 
             $user = new User();
-            $user->setEmail($faker->email);
-            $user->setPhoneNumber($faker->phoneNumber);
-            $user->setPassword($faker->phoneNumber);
+            $user->setRoles(['ROLE_USER']);
+            $user->setEmail($faker->email());
+            $user->setName($faker->name());
+            $user->setPhoneNumber($faker->phoneNumber());
             
             $hashPassword = $this->hasher->hashPassword(
                 $user,
