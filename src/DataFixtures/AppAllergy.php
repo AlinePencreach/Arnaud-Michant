@@ -21,6 +21,7 @@ class AppAllergy extends Fixture
         }
 
 
+        
         $manager->flush();
     }
 }
