@@ -23,22 +23,22 @@ class AppUser extends Fixture
     {
         $faker = Faker\Factory::create('fr_FR');
         // $product = new Product();
-        // $manager->persist($product);
-
+        
         for ($i=0; $i < 50; $i++) { 
             $user = new User();
             $user->setEmail($faker->email);
             $user->setPhoneNumber($faker->phoneNumber);
             $user->setPassword($faker->phoneNumber);
-
+            
             $hashPassword = $this->hasher->hashPassword(
                 $user,
                 'password'
             );
-
+            
             $user->setPassword($hashPassword);
-
-
+            
+            $manager->persist($user);
+            
         }
 
         $manager->flush();
