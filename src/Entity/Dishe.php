@@ -22,8 +22,8 @@ class Dishe
 
     #[Groups(['read:dishes'])]
     private ?int $id = null;
-
-    #[Groups(['read:dishes'])]
+    
+    #[Groups(['read:dishes', 'read:formulas'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 

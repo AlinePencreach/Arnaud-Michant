@@ -6,10 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuRepository;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:formulas']]
+)]
 class Menu
 {
     #[ORM\Id]
@@ -17,6 +20,7 @@ class Menu
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['read:formulas'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 

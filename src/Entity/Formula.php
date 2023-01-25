@@ -2,34 +2,47 @@
 
 namespace App\Entity;
 
+use App\Entity\Menu;
+use App\Entity\Dishe;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\FormulaRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: FormulaRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:formulas']]
+)]
 class Formula
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[Groups(['read:formulas'])]
     private ?int $id = null;
 
+    #[Groups(['read:formulas'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Groups(['read:formulas'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups(['read:formulas'])]
     #[ORM\Column]
     private ?int $price = null;
 
+    #[Groups(['read:formulas'])]
     #[ORM\ManyToMany(targetEntity: Dishe::class, inversedBy: 'formulas')]
     private Collection $dishes;
 
+    #[Groups(['read:formulas'])]
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'formula')]
     private Collection $menus;
 
