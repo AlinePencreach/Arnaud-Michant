@@ -6,30 +6,40 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ReservationRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:reservations' ]]
+)]
 class Reservation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[Groups(['read:reservations'])]
     private ?int $id = null;
 
+    #[Groups(['read:reservations'])]
     #[ORM\Column]
     private ?int $guest_number = null;
 
+    #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups(['read:reservations'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Visitor $visitor = null;
 
+    #[Groups(['read:reservations'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[Groups(['read:reservations', 'read:users'])]
     #[ORM\ManyToOne(inversedBy: 'reservation')]
     private ?Hourly $hourly = null;
 

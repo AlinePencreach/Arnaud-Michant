@@ -19,6 +19,7 @@ class Menu
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:memus'])]
     private ?int $id = null;
 
     #[Groups(['read:memus', 'read:formulas'])]

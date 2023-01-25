@@ -23,7 +23,7 @@ class Allergy
     #[Groups(['read:allergies'])]
     private ?int $id = null;
 
-    #[Groups(['read:allergies', 'read:dishes'])]
+    #[Groups(['read:allergies', 'read:dishes', 'read:users'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
