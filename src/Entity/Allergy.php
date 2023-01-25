@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AllergyRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Persisters\Collection\ManyToManyPersister;
 
 #[ORM\Entity(repositoryClass: AllergyRepository::class)]
 #[ApiResource()]
@@ -129,5 +130,10 @@ class Allergy
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }
