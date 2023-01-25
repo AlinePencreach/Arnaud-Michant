@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AllergyRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['container:allergies']]
+    normalizationContext: ['groups' => ['read:allergies']]
 )]
 class Allergy
 {
@@ -20,10 +20,10 @@ class Allergy
     #[ORM\GeneratedValue]
     #[ORM\Column]
 
-    #[Groups(['container:allergies'])]
+    #[Groups(['read:allergies'])]
     private ?int $id = null;
 
-    #[Groups(['container:allergies'])]
+    #[Groups(['read:allergies', 'read:dishes'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

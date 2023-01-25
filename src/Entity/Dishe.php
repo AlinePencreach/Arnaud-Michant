@@ -7,25 +7,35 @@ use App\Repository\DisheRepository;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: DisheRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:dishes']]
+)]
 class Dishe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[Groups(['read:dishes'])]
     private ?int $id = null;
 
+    #[Groups(['read:dishes'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Groups(['read:dishes'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[Groups(['read:dishes'])]
     #[ORM\Column]
     private ?int $price = null;
 
+    #[Groups(['read:dishes'])]
     #[ORM\ManyToMany(targetEntity: Allergy::class, inversedBy: 'dishes')]
     private Collection $allergies;
 
