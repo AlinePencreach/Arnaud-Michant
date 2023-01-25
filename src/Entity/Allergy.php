@@ -8,24 +8,33 @@ use App\Repository\AllergyRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Persisters\Collection\ManyToManyPersister;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AllergyRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['container:allergies']]
+)]
 class Allergy
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[Groups(['container:allergies'])]
     private ?int $id = null;
 
+    #[Groups(['container:allergies'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
+
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'allergies')]
     private Collection $user;
 
+
     #[ORM\ManyToMany(targetEntity: Dishe::class, mappedBy: 'allergies')]
     private Collection $dishes;
+
 
     #[ORM\ManyToMany(targetEntity: Visitor::class, mappedBy: 'allergies')]
     private Collection $visitors;
