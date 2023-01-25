@@ -19,7 +19,7 @@ class Allergy
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = "";
+    private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'allergies')]
     private Collection $user;

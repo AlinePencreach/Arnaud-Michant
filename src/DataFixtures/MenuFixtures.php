@@ -2,26 +2,28 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Allergy;
 use Faker;
+use App\Entity\Menu;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class AppAllergy extends Fixture
+class MenuFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Faker\Factory::create('fr_FR');
+        // $product = new Product();
+      
         
-        for ($i=0; $i < 10; $i++) { 
-            $allergy = new Allergy();
-            $allergy->setName($faker->lexify('????????'));
-    
-            $manager->persist($allergy);
+        for ($i=0; $i < 5; $i++) { 
+            $menu = new Menu();
+            $menu->setTitle($faker->word(3, true));
+           
+            
+            $manager->persist($menu);
+            
         }
 
-
-        
         $manager->flush();
     }
 }
