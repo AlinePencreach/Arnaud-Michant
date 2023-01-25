@@ -11,7 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:formulas']]
+    forceEager: false,
+    normalizationContext: ['groups' => ['read:formulas', 'read:memus']]
 )]
 class Menu
 {
@@ -20,10 +21,11 @@ class Menu
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:memus', 'read:formulas'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Groups(['read:memus'])]
     #[ORM\ManyToMany(targetEntity: Formula::class, inversedBy: 'menus')]
     private Collection $formula;
 

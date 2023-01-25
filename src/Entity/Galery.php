@@ -6,19 +6,26 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\GaleryRepository;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: GaleryRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:galleries']]
+)]
 class Galery
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:galleries'])]
     private ?int $id = null;
 
+    #[Groups(['read:galleries'])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Groups(['read:galleries'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $image = null;
 
