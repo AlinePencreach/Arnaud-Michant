@@ -18,7 +18,6 @@ class MenuFixtures extends Fixture
         for ($i=0; $i < 5; $i++) { 
             $menu = new Menu();
             $menu->setTitle($faker->word(3, true));
-           
             
             $manager->persist($menu);
             

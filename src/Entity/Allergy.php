@@ -36,14 +36,10 @@ class Allergy
     private Collection $dishes;
 
 
-    #[ORM\ManyToMany(targetEntity: Visitor::class, mappedBy: 'allergies')]
-    private Collection $visitors;
-
     public function __construct()
     {
         $this->user = new ArrayCollection();
         $this->dishes = new ArrayCollection();
-        $this->visitors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -114,35 +110,4 @@ class Allergy
         return $this;
     }
 
-    /**
-     * @return Collection<int, Visitor>
-     */
-    public function getVisitors(): Collection
-    {
-        return $this->visitors;
-    }
-
-    public function addVisitor(Visitor $visitor): self
-    {
-        if (!$this->visitors->contains($visitor)) {
-            $this->visitors->add($visitor);
-            $visitor->addAllergy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVisitor(Visitor $visitor): self
-    {
-        if ($this->visitors->removeElement($visitor)) {
-            $visitor->removeAllergy($this);
-        }
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
 }

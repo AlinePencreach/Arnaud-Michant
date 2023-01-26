@@ -8,6 +8,8 @@ use App\Repository\HourlyRepository;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: HourlyRepository::class)]
 #[ApiResource()]
@@ -18,12 +20,16 @@ class Hourly
     #[ORM\Column]
     private ?int $id = null;
 
+
+    #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $hour = null;
 
+    
     #[ORM\Column(nullable: true)]
     private ?int $host_limit = null;
 

@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:reservations' ]]
+    normalizationContext: ['groups' => ['read:reservations']]
 )]
 class Reservation
 {
@@ -28,11 +28,6 @@ class Reservation
     #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
-    #[Groups(['read:reservations'])]
-    #[ORM\ManyToOne(inversedBy: 'reservations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Visitor $visitor = null;
 
     #[Groups(['read:reservations'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
@@ -72,17 +67,6 @@ class Reservation
         return $this;
     }
 
-    public function getVisitor(): ?Visitor
-    {
-        return $this->visitor;
-    }
-
-    public function setVisitor(?Visitor $visitor): self
-    {
-        $this->visitor = $visitor;
-
-        return $this;
-    }
 
     public function getUser(): ?User
     {

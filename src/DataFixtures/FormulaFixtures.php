@@ -24,6 +24,7 @@ class FormulaFixtures extends Fixture
            
             
             $manager->persist($formula);
+            $listFormula[] = $formula;
             
         }
 
