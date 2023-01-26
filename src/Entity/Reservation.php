@@ -6,7 +6,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ReservationRepository;
+use Doctrine\DBAL\Types\Type;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Type as ConstraintsType;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 #[ApiResource(
@@ -23,10 +26,16 @@ class Reservation
 
     #[Groups(['read:reservations'])]
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez indiquer le nombre de personne pour la réservation")]
+    #[Assert\Type(
+        type: 'numeric',
+        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
+    )]
     private ?int $guest_number = null;
 
     #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
     #[Groups(['read:reservations'])]

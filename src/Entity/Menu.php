@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
 #[ApiResource(
@@ -24,6 +26,8 @@ class Menu
 
     #[Groups(['read:memus', 'read:formulas'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le menu doit contenir un titre")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères", maxMessage: "Le titre de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
     #[Groups(['read:memus'])]
