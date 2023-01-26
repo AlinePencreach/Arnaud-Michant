@@ -8,6 +8,8 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 #[ORM\Entity(repositoryClass: DisheRepository::class)]
@@ -25,14 +27,22 @@ class Dishe
     
     #[Groups(['read:dishes', 'read:formulas'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom du plat est obligatoire")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
     #[Groups(['read:dishes'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(min: 5, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
     #[Groups(['read:dishes'])]
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez renseigner un prix pour ce plat")]
+    #[Assert\Type(
+        type: 'numeric',
+        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
+    )]
     private ?int $price = null;
 
     #[Groups(['read:dishes'])]

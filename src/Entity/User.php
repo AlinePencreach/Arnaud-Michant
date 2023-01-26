@@ -2,20 +2,28 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Allergy;
+use App\Entity\Reservation;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
+
+
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['read:users' ]]
 )]
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé pour un autre compte')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -27,6 +35,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['read:users'])]
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: "Vous devez renseigner un email")]
+    #[Assert\Email(
+        message: 'Cet email {{ value }} n\'est pas un email valide.',
+    )]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -36,6 +48,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez renseigner un mot de passe")]
+    #[SecurityAssert\UserPassword(
+        message: 'Ce mot de passe est invalide.',
+    )]
     private ?string $password = null;
 
     #[Groups(['read:users', 'read:reservations'])]

@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Dishe;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AllergyRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Persisters\Collection\ManyToManyPersister;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AllergyRepository::class)]
 #[ApiResource(
@@ -25,6 +27,8 @@ class Allergy
 
     #[Groups(['read:allergies', 'read:dishes', 'read:users'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de l'allergie est obligatoire")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $name = null;
 
 

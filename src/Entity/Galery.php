@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\GaleryRepository;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 #[ORM\Entity(repositoryClass: GaleryRepository::class)]
@@ -23,10 +25,12 @@ class Galery
 
     #[Groups(['read:galleries'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "L'image doit comporter un titre'")]
     private ?string $title = null;
 
     #[Groups(['read:galleries'])]
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Vous devez importer un image")]
     private ?string $image = null;
 
     public function getId(): ?int

@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 #[ORM\Entity(repositoryClass: HourlyRepository::class)]
@@ -23,14 +25,23 @@ class Hourly
 
     #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\Date]
     private ?\DateTimeInterface $date = null;
 
     #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+     /**
+     * @var string A "H:i" formatted value
+     */
+    #[Assert\Time]
     private ?\DateTimeInterface $hour = null;
 
     
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'numeric',
+        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
+    )]
     private ?int $host_limit = null;
 
     #[ORM\OneToMany(mappedBy: 'hourly', targetEntity: Reservation::class)]
@@ -72,6 +83,10 @@ class Hourly
 
     public function getHostLimit(): ?int
     {
+        $host_limit = $this->host_limit;
+        // guarantee host_limit is 50
+        $host_limit[] = 50;
+
         return $this->host_limit;
     }
 

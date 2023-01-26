@@ -11,6 +11,8 @@ use App\Repository\FormulaRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 #[ORM\Entity(repositoryClass: FormulaRepository::class)]
@@ -28,14 +30,22 @@ class Formula
 
     #[Groups(['read:formulas'])]
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le nom de formule est obligatoire")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
     #[Groups(['read:formulas'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
     #[Groups(['read:formulas'])]
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez renseigner un prix pour cette formule")]
+    #[Assert\Type(
+        type: 'numeric',
+        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
+    )]
     private ?int $price = null;
 
     #[Groups(['read:formulas'])]
