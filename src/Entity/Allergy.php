@@ -14,6 +14,7 @@ use App\Repository\AllergyRepository;
 use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,13 +22,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(),
-        new Get(),
         new Post(),
+        new Get(),
         new Put(),
         new Delete()
     ],
-    normalizationContext: ['groups' => ['read:allergies']],
-    denormalizationContext: ['groups' => ['write:allergies']]
+    normalizationContext: [
+        'groups' => ['read:allergies']
+        
+    ],
+    denormalizationContext: [
+        'groups' => ['write:allergies']]
 )]
 class Allergy
 {

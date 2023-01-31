@@ -28,8 +28,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
     normalizationContext: ['groups' => ['read:reservations']]
 )]
 class Reservation
-{
-   
+{ 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -59,14 +58,36 @@ class Reservation
     #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
+    
+    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\Date]
+    private ?\DateTimeInterface $date = null;
+    
+    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
+    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    /**
+     * @var string A "H:i" formatted value
+     */
+    #[Assert\Time]
+    private ?\DateTimeInterface $hour = null;
+
+    #[Groups(['read:hourly', 'write:hourly'])]
+    #[ORM\Column(nullable: true)]
+    #[Assert\Type(
+        type: 'numeric',
+        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
+    )]
+    private ?int $host_limit = null;
+    
+    
     #[Groups(['read:reservations', 'read:hourly'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[Groups(['read:reservations', 'read:users'])]
-    #[ORM\ManyToOne(inversedBy: 'reservation')]
-    private ?Hourly $hourly = null;
+
+
 
     public function getId(): ?int
     {
@@ -110,17 +131,6 @@ class Reservation
         return $this;
     }
 
-    public function getHourly(): ?Hourly
-    {
-        return $this->hourly;
-    }
-
-    public function setHourly(?Hourly $hourly): self
-    {
-        $this->hourly = $hourly;
-
-        return $this;
-    }
 
     /**
      * Get the value of name
@@ -158,6 +168,68 @@ class Reservation
     public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date
+     */ 
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set the value of date
+     *
+     * @return  self
+     */ 
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of hour
+     */ 
+    public function getHour()
+    {
+        return $this->hour;
+    }
+
+    /**
+     * Set the value of hour
+     *
+     * @return  self
+     */ 
+    public function setHour($hour)
+    {
+        $this->hour = $hour;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of host_limit
+     */ 
+    public function getHost_limit()
+    {
+        return $this->host_limit;
+    }
+
+    /**
+     * Set the value of host_limit
+     *
+     * @return  self
+     */ 
+    public function setHost_limit($host_limit)
+    {
+        $this->host_limit = $host_limit;
+         // guarantee host_limit is 50
+         $host_limit[] = 50;
 
         return $this;
     }
