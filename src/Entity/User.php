@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 
-
+//issus resquest
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
