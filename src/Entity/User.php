@@ -41,10 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
     private ?int $id = null;
 
-    #[Groups(['read:users'])]
+    #[Groups(['read:users', 'read:reservation'])]
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: "Vous devez renseigner un email")]
     #[Assert\Type(Address::class,
@@ -69,11 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[Groups(['read:users'])]
+    #[Groups(['read:users', 'read:reservation'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone_number = null;
 
-    #[Groups(['read:users'])]
+    #[Groups(['read:users', 'read:reservation'])]
     #[ORM\ManyToMany(targetEntity: Allergy::class, mappedBy: 'user')]
     private Collection $allergies;
 

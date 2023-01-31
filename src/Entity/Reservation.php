@@ -34,37 +34,19 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['read:reservations', 'read:hourly'])]
+    #[Groups(['read:reservations'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Type('string')]
     #[Assert\NotBlank(message: "Vous devez indiquer un nom pour la réservation")]
     #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $name = null;
 
-    #[Groups(['read:reservations', 'read:hourly'])]
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Assert\Type('string')]
-    #[Assert\NotBlank(message: "Vous devez indiquer lun numéro de téléphone pour la réservation")]
-    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
-    private ?string $phoneNumber = null;
-
-    #[Groups(['read:reservations', 'read:hourly'])]
-    #[ORM\Column]
-    #[Assert\NotBlank(message: "Vous devez indiquer le nombre de personne pour la réservation")]
-    private ?int $guest_number = null;
-
-    #[Groups(['read:reservations', 'read:hourly'])]
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
-    private ?string $description = null;
-
-    
-    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
+    #[Groups(['read:reservations', 'read:users', 'write:reservation'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\Date]
     private ?\DateTimeInterface $date = null;
     
-    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
+    #[Groups(['read:reservations', 'read:users', 'write:reservation'])]
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
     /**
      * @var string A "H:i" formatted value
@@ -72,16 +54,33 @@ class Reservation
     #[Assert\Time]
     private ?\DateTimeInterface $hour = null;
 
-    #[Groups(['read:hourly', 'write:hourly'])]
+    #[Groups(['read:reservations'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: "Vous devez indiquer lun numéro de téléphone pour la réservation")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
+    private ?string $phoneNumber = null;
+
+    #[Groups(['read:reservations'])]
+    #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez indiquer le nombre de personne pour la réservation")]
+    private ?int $guest_number = null;
+
+    #[Groups(['read:reservations'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
+    private ?string $description = null;
+
+    
     #[ORM\Column(nullable: true)]
     #[Assert\Type(
         type: 'numeric',
         message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
     )]
-    private ?int $host_limit = null;
+    private ?int $host_limit = 50;
     
     
-    #[Groups(['read:reservations', 'read:hourly'])]
+    #[Groups(['read:reservations'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -225,11 +224,11 @@ class Reservation
      *
      * @return  self
      */ 
-    public function setHost_limit($host_limit)
+    public function setHost_limit($host_limit, $guest_number)
     {
         $this->host_limit = $host_limit;
-         // guarantee host_limit is 50
-         $host_limit[] = 50;
+        
+        $host_limit = $host_limit - $guest_number;
 
         return $this;
     }
