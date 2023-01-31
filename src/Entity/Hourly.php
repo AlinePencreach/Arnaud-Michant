@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Get;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Metadata\CollectionOperationInterface;
+use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     normalizationContext: ['groups' => ['read:hourly']],
     operations: [
-        new Get(),
+        new GetCollection(),
         new Post()
     ]
 )]
