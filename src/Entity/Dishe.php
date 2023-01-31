@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DisheRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:dishes']]
+    normalizationContext: ['groups' => ['read:dishes']],
+    denormalizationContext: ['groups' => ['write:dishes']]
 )]
 class Dishe
 {
@@ -22,21 +23,21 @@ class Dishe
     #[ORM\GeneratedValue]
     #[ORM\Column]
 
-    #[Groups(['read:dishes'])]
+
     private ?int $id = null;
     
-    #[Groups(['read:dishes', 'read:formulas'])]
+    #[Groups(['read:dishes', 'write:dishes', 'read:formulas', 'write:formulas', 'write:allergies'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom du plat est obligatoire")]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
-    #[Groups(['read:dishes'])]
+    #[Groups(['read:dishes', 'write:dishes', 'write:formulas', 'write:allergies'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(min: 5, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
-    #[Groups(['read:dishes'])]
+    #[Groups(['read:dishes', 'write:dishes', 'write:formulas', 'write:allergies'])]
     #[ORM\Column]
     #[Assert\NotBlank(message: "Vous devez renseigner un prix pour ce plat")]
     #[Assert\Type(
@@ -45,7 +46,7 @@ class Dishe
     )]
     private ?int $price = null;
 
-    #[Groups(['read:dishes'])]
+    #[Groups(['read:dishes', 'write:dishes'])]
     #[ORM\ManyToMany(targetEntity: Allergy::class, inversedBy: 'dishes')]
     private Collection $allergies;
 

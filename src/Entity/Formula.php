@@ -17,7 +17,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FormulaRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read:formulas']]
+    normalizationContext: ['groups' => ['read:formulas']],
+    denormalizationContext: ['groups' => ['write:formulas']]
+
 )]
 class Formula
 {
@@ -25,21 +27,20 @@ class Formula
     #[ORM\GeneratedValue]
     #[ORM\Column]
 
-    #[Groups(['read:formulas'])]
     private ?int $id = null;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de formule est obligatoire")]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\Column]
     #[Assert\NotBlank(message: "Vous devez renseigner un prix pour cette formule")]
     #[Assert\Type(
@@ -48,11 +49,11 @@ class Formula
     )]
     private ?int $price = null;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\ManyToMany(targetEntity: Dishe::class, inversedBy: 'formulas')]
     private Collection $dishes;
 
-    #[Groups(['read:formulas'])]
+    #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'formula')]
     private Collection $menus;
 

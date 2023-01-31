@@ -20,7 +20,6 @@ class Galery
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:galleries'])]
     private ?int $id = null;
 
     #[Groups(['read:galleries'])]

@@ -21,10 +21,9 @@ class Reservation
     #[ORM\GeneratedValue]
     #[ORM\Column]
 
-    #[Groups(['read:reservations'])]
     private ?int $id = null;
 
-    #[Groups(['read:reservations'])]
+    #[Groups(['read:reservations', 'read:hourly'])]
     #[ORM\Column]
     #[Assert\NotBlank(message: "Vous devez indiquer le nombre de personne pour la réservation")]
     #[Assert\Type(
@@ -33,12 +32,12 @@ class Reservation
     )]
     private ?int $guest_number = null;
 
-    #[Groups(['read:reservations'])]
+    #[Groups(['read:reservations', 'read:hourly'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 
-    #[Groups(['read:reservations'])]
+    #[Groups(['read:reservations', 'read:hourly'])]
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;

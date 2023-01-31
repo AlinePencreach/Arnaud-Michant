@@ -1,0 +1,8 @@
+api_platform:
+   title: 'API REST restaurant Arnaud Michant'
+   description: 'A Symfony API to manage a restaurant'
+   version: '1.0.0'
+   mapping:
+       paths: ['%kernel.project_dir%/src/Entity']
+   patch_formats:
+       json: ['application/merge-patch+json']

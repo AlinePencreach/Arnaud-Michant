@@ -2,19 +2,30 @@
 
 namespace App\Entity;
 
+use App\Entity\Reservation;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\HourlyRepository;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 
 #[ORM\Entity(repositoryClass: HourlyRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:hourly']],
+    operations: [
+        new Get(),
+        new Post()
+    ]
+)]
+
 class Hourly
 {
     #[ORM\Id]
@@ -23,12 +34,12 @@ class Hourly
     private ?int $id = null;
 
 
-    #[Groups(['read:reservations'])]
+    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Assert\Date]
     private ?\DateTimeInterface $date = null;
 
-    #[Groups(['read:reservations'])]
+    #[Groups(['read:hourly', 'read:reservations', 'read:users', 'write:hourly'])]
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
      /**
      * @var string A "H:i" formatted value
@@ -36,7 +47,7 @@ class Hourly
     #[Assert\Time]
     private ?\DateTimeInterface $hour = null;
 
-    
+    #[Groups(['read:hourly', 'write:hourly'])]
     #[ORM\Column(nullable: true)]
     #[Assert\Type(
         type: 'numeric',
@@ -44,6 +55,8 @@ class Hourly
     )]
     private ?int $host_limit = null;
 
+
+    #[Groups(['read:hourly'])]
     #[ORM\OneToMany(mappedBy: 'hourly', targetEntity: Reservation::class)]
     private Collection $reservation;
 
