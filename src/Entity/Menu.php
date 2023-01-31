@@ -39,6 +39,7 @@ class Menu
     #[Groups(['read:memus', 'read:formulas'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le menu doit contenir un titre")]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le titre doit faire au moins {{ limit }} caractères", maxMessage: "Le titre de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 

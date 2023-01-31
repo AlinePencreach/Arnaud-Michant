@@ -44,11 +44,13 @@ class Formula
     #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de formule est obligatoire")]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
     #[Groups(['read:formulas', 'write:formulas'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 

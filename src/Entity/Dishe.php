@@ -36,18 +36,18 @@ class Dishe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
-
     private ?int $id = null;
     
     #[Groups(['read:dishes', 'write:dishes', 'read:formulas', 'write:formulas', 'write:allergies'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom du plat est obligatoire")]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $title = null;
 
     #[Groups(['read:dishes', 'write:dishes', 'write:formulas', 'write:allergies'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 5, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $description = null;
 

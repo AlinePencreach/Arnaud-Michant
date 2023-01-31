@@ -40,6 +40,7 @@ class Allergy
     #[Groups(['read:allergies', 'write:allergies', 'read:dishes', 'write:dishes', 'read:users'])]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "Le nom de l'allergie est obligatoire")]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 255, minMessage: "Le nom doit faire au moins {{ limit }} caractères", maxMessage: "Le nom de ne peut pas dépasser {{ limit }} caractères")]
     private ?string $name = null;
 

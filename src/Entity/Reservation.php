@@ -14,7 +14,7 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ReservationRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Type as ConstraintsType;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 #[ApiResource(
@@ -29,19 +29,29 @@ use Symfony\Component\Validator\Constraints\Type as ConstraintsType;
 )]
 class Reservation
 {
+   
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
     private ?int $id = null;
+
+    #[Groups(['read:reservations', 'read:hourly'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: "Vous devez indiquer un nom pour la réservation")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
+    private ?string $name = null;
+
+    #[Groups(['read:reservations', 'read:hourly'])]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank(message: "Vous devez indiquer lun numéro de téléphone pour la réservation")]
+    #[Assert\Length(min: 3, max: 255, minMessage: "La description doit faire au moins {{ limit }} caractères", maxMessage: "La description de ne peut pas dépasser {{ limit }} caractères")]
+    private ?string $phoneNumber = null;
 
     #[Groups(['read:reservations', 'read:hourly'])]
     #[ORM\Column]
     #[Assert\NotBlank(message: "Vous devez indiquer le nombre de personne pour la réservation")]
-    #[Assert\Type(
-        type: 'numeric',
-        message: 'La valeur {{ value }} n\'est pas un {{ type }} valide.',
-    )]
     private ?int $guest_number = null;
 
     #[Groups(['read:reservations', 'read:hourly'])]
@@ -108,6 +118,46 @@ class Reservation
     public function setHourly(?Hourly $hourly): self
     {
         $this->hourly = $hourly;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     *
+     * @return  self
+     */ 
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of phoneNumber
+     */ 
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * Set the value of phoneNumber
+     *
+     * @return  self
+     */ 
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
