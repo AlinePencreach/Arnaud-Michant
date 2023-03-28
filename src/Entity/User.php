@@ -22,20 +22,22 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 
-//issus resquest
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(),
+        new Post(processor: UserPasswordHasher::class, validationContext: ['groups' => ['Default', 'user:create']]),
         new Get(),
-        new Post(),
-        new Put(),
-        new Delete()
+        new Put(processor: UserPasswordHasher::class),
+        new Delete(),
     ],
-    normalizationContext: ['groups' => ['read:users' ]]
+    normalizationContext: ['groups' => ['read:users']],
+    denormalizationContext: ['groups' => ['create:users', 'update:users']],
 )]
+
 #[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé pour un autre compte')]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -43,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['read:users', 'read:reservation'])]
+    #[Groups(['read:users', 'create:users', 'update:users', 'read:reservations'])]
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(message: "Vous devez renseigner un email")]
     #[Assert\Type(Address::class,
@@ -64,21 +66,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $password = null;
 
+    #[Assert\NotBlank(groups: ['create:users'])]
+    #[Groups(['create:users', 'update:users'])]
+    private ?string $plainPassword = null;
+
     #[Groups(['read:users', 'read:reservations'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[Groups(['read:users', 'read:reservation'])]
+    #[Groups(['read:users', 'read:reservations'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone_number = null;
 
-    #[Groups(['read:users', 'read:reservation'])]
+    #[Groups(['read:users', 'read:reservations'])]
     #[ORM\ManyToMany(targetEntity: Allergy::class, mappedBy: 'user')]
     private Collection $allergies;
 
     #[Groups(['read:users'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reservation::class)]
     private Collection $reservations;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -233,6 +242,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $reservation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of plainPassword
+     */ 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */ 
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
